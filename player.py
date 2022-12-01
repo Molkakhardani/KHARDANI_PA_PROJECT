@@ -23,8 +23,8 @@ class Player:
             self.schema[2][self.firstPlayerSteps + 3] = " "
             self.schema[1][self.firstPlayerSteps + 3] = "__"
         if (self.playerNumber == 2):
-            self.schema[1][0] = "__"
-            self.schema[2][0] = " "
+            self.schema[2][self.secondPlayerSteps] = " "
+            self.schema[1][self.secondPlayerSteps] = "__"
 
     # rest mode
     def rest(self):
@@ -32,8 +32,8 @@ class Player:
             self.schema[1][self.firstPlayerSteps + 3] = " "
             self.schema[2][self.firstPlayerSteps + 3] = "\\"
         if (self.playerNumber == 2):
-            self.schema[1][0] = " "
-            self.schema[2][0] = "/"
+            self.schema[1][self.secondPlayerSteps] = " "
+            self.schema[2][self.secondPlayerSteps] = "/"
 
     # block function and change the shield cell only
     def block(self):
@@ -42,15 +42,22 @@ class Player:
             self.schema[1][self.firstPlayerSteps + 3] = "]"
             self.schema[2][self.firstPlayerSteps + 3] = " "
         if (self.playerNumber == 2):
-            self.schema[1][0] = "["
-            self.schema[2][0] = " "
+            self.schema[1][self.secondPlayerSteps] = "["
+            self.schema[2][self.secondPlayerSteps] = " "
 
     # moveForward function => add empty cells at the beginning of each sub array.
     def moveForward(self):
+        # check to not get out of the screen
         if (self.playerNumber == 1 and self.firstPlayerSteps < 15):
             for i in range(len(self.schema)):
                 self.schema[i].insert(0, " ")
             self.firstPlayerSteps += 1
+        # check to not get out of the screen
+        if (self.playerNumber == 2 and 0 <= self.secondPlayerSteps < 15):
+            for i in range(len(self.schema)):
+                self.schema[i].insert(0, " ")
+            self.secondPlayerSteps += 1
+   
 
     # moveBackward function => remove empty cells from the beginning of each sub array.
     # keep track of the position with the number of steps (firstPlayerSteps)
@@ -61,5 +68,10 @@ class Player:
                 self.schema[i].pop(0)
             if (self.playerNumber == 1):
                 self.firstPlayerSteps -= 1
-            else:
-                self.secondPlayerSteps -= 1
+
+        # check to not get out of the screen
+        if ((self.playerNumber == 2 and self.secondPlayerSteps > 0)):
+            for i in range(len(self.schema)):
+                self.schema[i].pop(0)
+            if (self.playerNumber == 2):
+                self.secondPlayerSteps -= 1  

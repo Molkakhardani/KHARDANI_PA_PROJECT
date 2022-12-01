@@ -1,6 +1,7 @@
 import curses
 import keyboard
 import numpy as np
+import time 
 
 
 class Game:
@@ -14,7 +15,7 @@ class Game:
         self.player1 = player1
         self.player2 = player2
 
-        # prepare the two players data (2D array) will be printed by the game class
+        # prepare the two players data (2D array) that will be printed by the game class
         self.player1Data = player1.getPlayerData()
         self.player2Data = player2.getPlayerData()
         # set up curses
@@ -32,6 +33,10 @@ class Game:
         self.printPlayer(self.player2Data, self.playerTwoScreen)
 
         while True:
+            start_time =time.time()
+            x=1
+            counter=0
+
             # catch all the keyboard event
             event = keyboard.read_event()
             if (event.event_type == keyboard.KEY_DOWN):
@@ -50,6 +55,10 @@ class Game:
                     self.player2.attack()
                 if (event.name == 'p'):
                     self.player2.block()
+                if (event.name == 'droite'):
+                    self.player2.moveForward()
+                if (event.name == 'gauche'):
+                    self.player2.moveBackward()
 
             # each time the key up we have to reset the display and put the player in rest (\).
             if (event.event_type == keyboard.KEY_UP):
@@ -62,6 +71,16 @@ class Game:
                 self.player1.getPlayerData())
             self.updateSecondPlayerMovement(
                 self.player2.getPlayerData())
+
+            # calculate the FPS after each event
+            # https://stackoverflow.com/questions/43761004/fps-how-to-divide-count-by-time-function-to-determine-fps
+            counter+=1
+            if (time.time()- start_time)> x:
+                FPS = counter/(time.time()- start_time)
+                counter=0
+                start_time =time.time()
+                time.sleep(FPS)
+
 
     def prepareBattleGame(self):
 
